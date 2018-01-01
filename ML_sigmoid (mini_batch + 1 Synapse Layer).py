@@ -1,3 +1,11 @@
+#!/usr/bin/env python
+# Title         :ML_sigmoid (full_batch + 1 Synapse Layer).py
+# Description   :This will transform to output with only two layers (input and
+#                output), possible only because the data is linearly separable.
+#                The input is mini-batched.
+# Author        :iamtrask, modified by neves4
+#==============================================================================
+
 # Importar numpy como dependência para as funções/matrizes nessa ML
 import numpy as np
 
@@ -32,18 +40,17 @@ num_rowsX = np.shape(X)[0]
 np.random.seed(1)
 
 # Inicializar os neurônios da ML, de forma aleatória e com média 0 (esta função
-# segue o princípio de função específica normal)
-syn0 = 2*np.random.random((3,1)) - 1
-# Usar função de impressão print(syn0) caso haja dúvida sobre como são Iniciali
-# zados os neurônios (synapses)
+# segue o princípio de função específica normal). Usar função de impressão
+# 'print(syn0)' caso haja dúvida sobre como são Inicializados os neurônios
+syn0 = 2*np.random.random((3, 1)) - 1
 
 # Os neurônios serão treinados t_ammount de vezes
 t_ammount = 10000
 
 for t in range(t_ammount):
     for u in range(1, int(num_rowsX/2) + 1):
-        # I0 será sempre o input, I1 será o output, unidos pelas synapses. A es-
-        # timativa I1 do resultado é o sigmoid da multiplicação de matrizes en-
+        # L0 será sempre o input, L1 será o output, unidos pelas synapses. A es-
+        # timativa L1 do resultado é o sigmoid da multiplicação de matrizes en-
         # tre I0 e syn0
         L0 = X[(2*u - 2):(2*u), 0:3]
         L1 = nonlin(np.dot(L0, syn0))
@@ -67,6 +74,3 @@ for t in range(t_ammount):
 if(t == 9999):
     print(ordinal(t), "iteration:")
     print("\t" + str(L1).replace('\n','\n\t'))
-
-# Baseado em http://iamtrask.github.io/2015/07/12/basic-python-network/, com al-
-# terações para realizar o mini-batch.
