@@ -17,7 +17,7 @@ sigmoid = lambda n: (1/(1+np.exp(-n)))
 deriv_sigmoid = lambda n: (n*(1-n))
 
 # Declaração de input (X) e output esperado (Y)
-X = np.array([  [0, 0, 1], [0, 1, 1], [1, 0, 1], [1, 1, 1]])
+X = np.array([[0, 0, 1], [0, 1, 1], [1, 0, 1], [1, 1, 1]])
 Y = np.array([[0, 1, 1, 0]]).T
 
 # Como boa prática, é necessário realimentar o random para que os resultados se-
@@ -26,39 +26,38 @@ np.random.seed(1)
 
 # A estrutura principal da nossa rede neural será composta por três layers L e o
 # número de sinapses deve ser igual a (n. de layers - 1) = 2. O layer L0 será
-# sempre o input, logo será declarado aqui também. As synapses são Inicializadas
-# com pesoss entre 0 e 1, por isso a multiplicação por 2 e subtração por 1
-syn0 = 2*np.random.random((3, 4)) - 1
-syn1 = 2*np.random.random((4, 1)) - 1
+# sempre o input, será adicionado para visualização dos layers
+syn0 = np.random.randn(3, 4)
+syn1 = np.random.randn(4, 1)
+L0 = X
 
-epoch, error, desirable_error = [0, 50, 0.005]
+# Parametrização da rede neural e pontos de parada no treinamento
+epoch, max_epoch = [0, 10000]
 
 # Loop para treinamento da rede neural
-while (error >= desirable_error):
+for epoch in range(max_epoch):
     # Atualização dos layers de acordo com os pesos
-    L0 = X
-    L1 = sigmoid(np.dot(L0, syn0))
-    L2 = sigmoid(np.dot(L1, syn1))
+    L1 = sigmoid(L0 @ syn0)
+    L2 = sigmoid(L1 @ syn1)
 
     # O algoritmo usa backpropagation, começando a calcular o erro pelos laers
     # mais externos, L2, calculando seu delta que irá para L1
     L2_error = Y - L2
     L2_delta = L2_error * deriv_sigmoid(L2)
 
-    epoch += 1
-    error = np.mean(np.abs(L2_error))
-
-    if ((epoch % 1000) == 0):
-        print(ordinal(epoch) + " epoch:" + "\n\t" + "the error is " +
+    if (epoch == 0):
+        error = np.mean(np.abs(L2_error))
+        print(ordinal(epoch + 1) + " epoch:" + "\n\t" + "the error is " +
               str(error))
 
     # Usando o L2_delta, o erro será propagado para L1
-    L1_error = np.dot(L2_delta, syn1.T)
+    L1_error = L2_delta @ syn1.T
     L1_delta = L1_error * deriv_sigmoid(L1)
 
-    syn1 += 10*np.dot(L1.T, L2_delta)
-    syn0 += 10*np.dot(L0.T, L1_delta)
+    syn1 += 10*(L1.T @ L2_delta)
+    syn0 += 10*(L0.T @ L1_delta)
 
-print("The final epoch is: " + str(epoch) + ". With that, the final error is " +
-      str(error) + ".\nThe final L2 estimation is: \n\t" + str(L2).replace('\n',
-      '\n\t'))
+error = np.mean(np.abs(L2_error))
+print("The final epoch is: " + str(epoch+1) + ". With that, the final error is "
+       + str(error) + ".\nThe final L2 estimation is: \n\t" + str(L2).replace(
+       '\n', '\n\t'))
