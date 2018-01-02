@@ -16,6 +16,9 @@ ordinal = lambda n: "%d%s" % (n,"tsnrhtdd"[(n/10%10!=1)*(n%10<4)*n%10::4])
 sigmoid = lambda n: (1/(1+np.exp(-n)))
 deriv_sigmoid = lambda n: (n*(1-n))
 
+# Parametrização da rede neural e pontos de parada no treinamento
+inputSize, hiddenSize, outputSize, max_epoch = [3, 4, 1, 10000]
+
 # Declaração de input (X) e output esperado (Y)
 X = np.array([[0, 0, 1], [0, 1, 1], [1, 0, 1], [1, 1, 1]])
 Y = np.array([[0, 1, 1, 0]]).T
@@ -27,12 +30,9 @@ np.random.seed(1)
 # A estrutura principal da nossa rede neural será composta por três layers L e o
 # número de sinapses deve ser igual a (n. de layers - 1) = 2. O layer L0 será
 # sempre o input, será adicionado para visualização dos layers
-syn0 = np.random.randn(3, 4)
-syn1 = np.random.randn(4, 1)
+syn0 = np.random.randn(inputSize, hiddenSize)
+syn1 = np.random.randn(hiddenSize, outputSize)
 L0 = X
-
-# Parametrização da rede neural e pontos de parada no treinamento
-epoch, max_epoch = [0, 10000]
 
 # Loop para treinamento da rede neural
 for epoch in range(max_epoch):
