@@ -17,10 +17,10 @@ sigmoid = lambda n: (1/(1+np.exp(-n)))
 deriv_sigmoid = lambda n: (n*(1-n))
 
 # Parametrização da rede neural e pontos de parada no treinamento
-inputSize, hiddenSize, outputSize, max_epoch = [3, 4, 1, 10000]
+inputSize, hiddenSize, outputSize, max_epoch, alpha = [3, 4, 1, 10000, 10]
 
-# Declaração de input (X) e output esperado (Y)
-X = np.array([[0, 0, 1], [0, 1, 1], [1, 0, 1], [1, 1, 1]])
+# Declaração de input (X), que também é o layer L0, e output esperado (Y)
+L0 = X = np.array([[0, 0, 1], [0, 1, 1], [1, 0, 1], [1, 1, 1]])
 Y = np.array([[0, 1, 1, 0]]).T
 
 # Como boa prática, é necessário realimentar o random para que os resultados se-
@@ -28,11 +28,9 @@ Y = np.array([[0, 1, 1, 0]]).T
 np.random.seed(1)
 
 # A estrutura principal da nossa rede neural será composta por três layers L e o
-# número de sinapses deve ser igual a (n. de layers - 1) = 2. O layer L0 será
-# sempre o input, será adicionado para visualização dos layers
+# número de sinapses deve ser igual a (n. de layers - 1) = 2
 syn0 = np.random.randn(inputSize, hiddenSize)
 syn1 = np.random.randn(hiddenSize, outputSize)
-L0 = X
 
 # Loop para treinamento da rede neural
 for epoch in range(max_epoch):
@@ -45,7 +43,7 @@ for epoch in range(max_epoch):
     L2_error = Y - L2
     L2_delta = L2_error * deriv_sigmoid(L2)
 
-    if (epoch == 0):
+    if (epoch == 0): # Impressão do erro inicial
         error = np.mean(np.abs(L2_error))
         print(ordinal(epoch + 1) + " epoch:" + "\n\t" + "the error is " +
               str(error))
@@ -54,10 +52,10 @@ for epoch in range(max_epoch):
     L1_error = L2_delta @ syn1.T
     L1_delta = L1_error * deriv_sigmoid(L1)
 
-    syn1 += 10*(L1.T @ L2_delta)
-    syn0 += 10*(L0.T @ L1_delta)
+    syn1 += alpha*(L1.T @ L2_delta) # Atualização das synapses utilizando passos
+    syn0 += alpha*(L0.T @ L1_delta) # que são 'alpha' maiores que a variação
 
-error = np.mean(np.abs(L2_error))
+error = np.mean(np.abs(L2_error)) # Erro final, que será impresso a seguir
 print("The final epoch is: " + str(epoch+1) + ". With that, the final error is "
        + str(error) + ".\nThe final L2 estimation is: \n\t" + str(L2).replace(
        '\n', '\n\t'))
