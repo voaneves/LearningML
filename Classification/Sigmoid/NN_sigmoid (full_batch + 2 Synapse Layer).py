@@ -4,6 +4,7 @@
 #                and a hidden layer), which forms a neural network. The input is
 #                full-batched.
 # Author        :iamtrask, modified by neves4
+# License       : MIT License
 #==============================================================================
 
 # Importar numpy como dependência para as funções/matrizes nessa ML

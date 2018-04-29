@@ -4,6 +4,7 @@
 #                output), possible only because the data is linearly separable.
 #                The input is mini-batched.
 # Author        :iamtrask, modified by neves4
+# License       : MIT License
 #==============================================================================
 
 # Importar numpy como dependência para as funções/matrizes nessa ML
