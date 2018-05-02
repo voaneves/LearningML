@@ -4,7 +4,7 @@
 #                ton Housing prices using ScikitLearn techniques and datasets.
 #                The algorithm used is the Ordinary Least Squares and in the
 #                output, we're going to calculate the mean_squared_error and
-#                plot a comparative graph of Real Prices vs Predicted Prices 
+#                plot a comparative graph of Real Prices vs Predicted Prices
 # Author        : Neves4
 # License       : MIT License
 #==============================================================================
@@ -47,28 +47,19 @@ Y_pred = lm.predict(X_test)
 ##### ERROR #####
 # Encontra o MSE, que será o benchmark para este algoritmo, para identificar
 # quão boa foi sua aproximação
+acc = lm.score(X_test, Y_test)
 mse = mean_squared_error(Y_test, Y_pred)
-print("%.4f" %mse)
+cv_scores = model_selection.cross_val_score(lm, X, Y, cv=5)
+print("Model Accuracy: {:.4f}" .format(acc))
+print("MSE: {:.4f}" .format(mse))
+print("CV Scores: {:.2f} (+/- {:.2f})" .format(cv_scores.mean(),\
+                                               cv_scores.std() * 2))
 
 ##### PLOT #####
-# These are the "Tableau 20" colors as RGB. Using number 4
-tableau20 = [(31, 119, 180), (174, 199, 232), (255, 127, 14), (255, 187, 120),
-             (44, 160, 44), (152, 223, 138), (214, 39, 40), (255, 152, 150),
-             (148, 103, 189), (197, 176, 213), (140, 86, 75), (196, 156, 148),
-             (227, 119, 194), (247, 182, 210), (127, 127, 127), (199, 199, 199),
-             (188, 189, 34), (219, 219, 141), (23, 190, 207), (158, 218, 229)]
-
-# Scale the RGB values to the [0, 1] range, which is the format matplotlib
-# accepts
-for i in range(len(tableau20)):
-    r, g, b = tableau20[i]
-    tableau20[i] = (r / 255., g / 255., b / 255.)
-
 # Plot outputs, using scatter and tableau n. 4. Ticks are diabled and everything
 # else is the cleanest that I could
 plt.style.use('ggplot')
-plt.scatter(Y_test, Y_pred, c=tableau20[4], alpha=0.75, label=\
-            'Comparative Prices')
+plt.scatter(Y_test, Y_pred, alpha=0.75, label='Comparative Prices')
 plt.tick_params(
     axis='both',       # changes apply to the x-axis
     which='both',      # both major and minor ticks are affected
