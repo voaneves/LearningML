@@ -1,11 +1,15 @@
 #!/usr/bin/env python
-# Title         : Boston_LR.py
+# Title         : LR_BostonHousing.py
 # Description   : With Linear Regression, we hope to accurately predict the Bos-
 #                ton Housing prices using ScikitLearn techniques and datasets.
 #                The algorithm used is the Ordinary Least Squares and in the
 #                output, we're going to calculate the mean_squared_error and
 #                plot a comparative graph of Real Prices vs Predicted Prices
 # Author        : Neves4
+# Outputs       : Figure with a plot 'Predicted prices vs Real Prices'
+#                 Values: RMSE: 3.8744
+#                         R^2 score: 0.7545
+#                         CV Scores: -0.15 (+/- 1.98)
 # License       : MIT License
 #==============================================================================
 
@@ -22,7 +26,7 @@ import pandas as pd
 from sklearn import datasets
 from sklearn import model_selection
 from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_squared_error, r2_score
 
 ##### DECLARING AND TRAINING #####
 # Carregamento do dataset do boston, conversão para o framework pandas e como a
@@ -47,11 +51,13 @@ Y_pred = lm.predict(X_test)
 ##### ERROR #####
 # Encontra o MSE, que será o benchmark para este algoritmo, para identificar
 # quão boa foi sua aproximação
-acc = lm.score(X_test, Y_test)
-mse = mean_squared_error(Y_test, Y_pred)
-cv_scores = model_selection.cross_val_score(lm, X, Y, cv=5)
-print("Model Accuracy: {:.4f}" .format(acc))
-print("MSE: {:.4f}" .format(mse))
+r2_score = r2_score(Y_pred, Y_test)
+rmse = np.sqrt(mean_squared_error(Y_test, Y_pred))
+cv_scores = model_selection.cross_val_score(lm, X_test, Y_test, cv=5)
+
+print("------- ACCURACY ASSESSMENT -------")
+print("RMSE: {:.4f}" .format(rmse))
+print("R^2 score: {:.4f}" .format(r2_score))
 print("CV Scores: {:.2f} (+/- {:.2f})" .format(cv_scores.mean(),\
                                                cv_scores.std() * 2))
 
