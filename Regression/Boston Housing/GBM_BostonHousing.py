@@ -1,11 +1,16 @@
 #!/usr/bin/env python
 # Title         : Boston_LR.py
-# Description   : With Linear Regression, we hope to accurately predict the Bos-
-#                ton Housing prices using ScikitLearn techniques and datasets.
-#                The algorithm used is the Ordinary Least Squares and in the
-#                output, we're going to calculate the mean_squared_error and
-#                plot a comparative graph of Real Prices vs Predicted Prices
+# Description   : With Linear Regression, we estabilished our baseline model.
+#                 Moving to Gradient Boosting Regressor from sklearn, we expect
+#                 to improve accuracy R^2 score and CV score, for better predic-
+#                 tions. We also plot a comparative graph of Real Prices vs pre-
+#                 dicted Prices, with all features' importances
 # Author        : Neves4
+# Outputs       : Figure with two plots: 'Predicted prices vs Real Prices'
+#                                        'Importância das variáveis'
+#                 Values: RMSE: 2.1041
+#                         R^2 score: 0.9117
+#                         CV Scores: 0.61 (+/- 0.52)
 # License       : MIT License
 #==============================================================================
 
@@ -16,13 +21,59 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 
+plt.style.use('ggplot') # Customizando o estilo do matplotlib
+
 # Importar também os datasets (pois utilizaremos o load_boston) e serão usadas
 # as funções shuffe (para embaralhar os dados) e mean_square_error (para calcu-
 # lar o erro do algoritmo em questão)
 from sklearn import datasets
 from sklearn import model_selection
 from sklearn import ensemble
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_squared_error, r2_score
+
+##### FUNCTIONS #####
+def plot_FeatureImportances(model, X, Y_test, Y_pred):
+    """
+    Plot the Feature Importances of a given model and also the predictions vs
+    the actual values. This funcion outputs two graphs on the same figure
+    """
+    feature_importances = np.array(model.feature_importances_)
+    feature_importances = 100*(feature_importances/feature_importances.max())
+    pos = np.arange(feature_importances.shape[0]) + .5
+    labels_X = np.array(X.columns.values)
+
+    idx = np.argsort(feature_importances)
+
+    feature_importances = np.array(feature_importances)[idx]
+    labels_X = np.array(labels_X)[idx]
+
+    plt.figure(figsize=(13, 6))
+
+    # 1st graph - plot feature importances and their absolute value
+    plt.subplot(1, 2, 1)
+    plt.title('Importância das variáveis')
+    plt.barh(pos, feature_importances, align='center')
+    plt.yticks(pos, labels_X)
+    plt.xlabel('Importância relativa')
+    plt.tick_params(
+        axis='both',       # changes apply to the x-axis
+        which='both',      # both major and minor ticks are affected
+        length=0   )       # labels along the bottom edge are off
+
+    # 2nd graph - scatter graph that compare estimated vs real prices
+    plt.subplot(1, 2, 2)
+    plt.scatter(Y_test, Y_pred, alpha=0.75, label='Índices comparados')
+    plt.tick_params(
+        axis='both',       # changes apply to the x-axis
+        which='both',      # both major and minor ticks are affected
+        length=0   )       # labels along the bottom edge are off
+    legend = plt.legend(loc='upper left', frameon=True, handletextpad=0.1)
+    legend.get_frame().set_facecolor('white')
+    plt.xlabel("Índice Real")
+    plt.ylabel("Índice Estimado")
+    plt.title("Comparativo entre índices reais e estimados")
+    plt.tight_layout()
+    plt.show()
 
 def GradientBooster(param_grid, n_jobs):
     estimator = ensemble.GradientBoostingRegressor(n_estimators = 250,\
@@ -93,12 +144,13 @@ Y_pred = gbt.predict(X_test)
 ##### ERROR #####
 # Encontra o MSE, que será o benchmark para este algoritmo, para identificar
 # quão boa foi sua aproximação
-mse = mean_squared_error(Y_test, Y_pred)
-acc = gbt.score(X_test, Y_test)
+rmse = np.sqrt(mean_squared_error(Y_test, Y_pred))
+r2_score = r2_score(Y_pred, Y_test)
 cv_scores = model_selection.cross_val_score(gbt, X, Y, cv=5)
 
-print("Model Accuracy: {:.4f}" .format(acc))
-print("MSE: {:.4f}" .format(mse))
+print("------- ACCURACY ASSESSMENT -------")
+print("RMSE: {:.4f}" .format(rmse))
+print("R^2 score: {:.4f}" .format(r2_score))
 print("CV Scores: {:.2f} (+/- {:.2f})" .format(cv_scores.mean(),\
                                                cv_scores.std() * 2))
 
@@ -106,39 +158,4 @@ print("CV Scores: {:.2f} (+/- {:.2f})" .format(cv_scores.mean(),\
 # Plot outputs using scatter. Ticks are diabled and everything else is the clea-
 # nest that I could. The 1st graph - Featura Importances normalized with the
 # highest value. Useful function here is print ("Feature Importances")
-feature_importances = gbt.feature_importances_
-feature_importances = 100*(feature_importances/feature_importances.max())
-pos = np.arange(feature_importances.shape[0]) + .5
-labels_X = X.columns.values
-
-# It's important to use np.array before argsort, if it's not an array
-idx = np.argsort(feature_importances)
-
-feature_importances = np.array(feature_importances)[idx]
-labels_X = np.array(labels_X)[idx]
-
-plt.figure(figsize=(14, 6))
-plt.style.use('ggplot')
-plt.subplot(1, 2, 1)
-plt.title('Importância das variáveis')
-plt.barh(pos, feature_importances, align='center')
-plt.yticks(pos, labels_X)
-plt.xlabel('Importância relativa')
-plt.tick_params(
-    axis='both',       # changes apply to the x-axis
-    which='both',      # both major and minor ticks are affected
-    length=0   )       # labels along the bottom edge are off
-
-# 2nd graph - scatter graph that compare estimated vs real prices
-plt.subplot(1, 2, 2)
-plt.scatter(Y_test, Y_pred, alpha=0.75, label='Comparative Prices')
-plt.tick_params(
-    axis='both',       # changes apply to the x-axis
-    which='both',      # both major and minor ticks are affected
-    length=0   )       # labels along the bottom edge are off
-legend = plt.legend(loc='upper left', frameon=True, handletextpad=0.1)
-legend.get_frame().set_facecolor('white')
-plt.xlabel("Real prices")
-plt.ylabel("Predicted prices")
-plt.title("Predicted prices vs Real Prices")
-plt.show()
+plot_FeatureImportances(gbt, X, Y_test, Y_pred)
