@@ -84,7 +84,9 @@ print("  DONE! CV Scores: {:.4f} (+/- {:.4f})" .format(rf_cv_scores.mean(),\
                                                        rf_cv_scores.std() * 2))
 
 class Ensemble(object):
-    """The object input is composed of 'n_splits', 'stacker' and list of
+    """Ensemble base_models on train data than fit/predict
+
+    The object input is composed of 'n_splits', 'stacker' and list of
     'base_models'.
 
     The __init__ method self-assign the inputs.
@@ -94,8 +96,8 @@ class Ensemble(object):
     a new column in the end. In the end, predictions are made with these new
     columns.
 
-    If wanting voting ensemble, the ammount of models passed on base_models can
-    be repeated.
+    If sought the use of voting ensemble, the ammount of models passed on
+    base_models can be repeated.
     """
 
     def __init__(self, n_splits, stacker, base_models):
@@ -115,11 +117,14 @@ class Ensemble(object):
         S_train = np.zeros((X.shape[0], len(self.base_models)))
         S_test = np.zeros((T.shape[0], len(self.base_models)))
 
+        # Loop trough base_models
         print("------- FITTING Stacker - 2nd level -------")
         for i, clf in enumerate(self.base_models):
 
+            # Create a dummy to calculate predictions on all folds
             S_test_i = np.zeros((T.shape[0], self.n_splits))
 
+            # Loop trough data folds
             for j, (train_idx, test_idx) in enumerate(folds):
                 X_train = X[train_idx]
                 Y_train = Y[train_idx]
@@ -134,14 +139,20 @@ class Ensemble(object):
 
                 S_train[test_idx, i] = Y_pred
                 S_test_i[:, j] = clf.predict(T)[:]
+
+            # Update test data with average of predictions from the dummy
             S_test[:, i] = S_test_i.mean(axis = 1)
 
+        # Print final CV score
         results = cross_val_score(self.stacker, S_train, Y, cv=5, scoring='r2')
         print("\033[1;92mDONE! \033[0;0m\033[1;37mCV scores: {:.4f} (+/- {:.4f})"
               .format(results.mean(), results.std() * 2))
 
+        # After creating new features on the test data, fit the chosen stacker
+        # on train data and finally predict on test data, then return
         self.stacker.fit(S_train, Y)
         final_prediction = self.stacker.predict(S_test)[:]
+
         return final_prediction
 
 stack = Ensemble(n_splits = 5, stacker = svr_mdl,
