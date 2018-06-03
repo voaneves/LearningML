@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Title         : Boston_LR.py
+# Title         : GBM_BostonHousing.py
 # Description   : With Linear Regression, we estabilished our baseline model.
 #                 Moving to Gradient Boosting Regressor from sklearn, we expect
 #                 to improve accuracy R^2 score and CV score, for better predic-
