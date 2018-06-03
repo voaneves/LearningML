@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # Title         : XGB_BostonHousing.py
 # Description   : After using LinearRegression and GradientBoostingRegressor, we
-#                 can go further and use state-of-the-art algorithms, like
-#                 XGBReegressor. It can use regularization and better predict
-#                 correlations on this dataset. We plot RMSE per number of Boos-
-#                 ters and we also plot the comparative graph of Real Prices vs
-#                 Predicted Prices, with all features' importances
+#                 can further improve the predicitions with state-of-the-art
+#                 algorithms, like XGBReegressor. It can use regularization and
+#                 better predict correlations on this dataset. We plot RMSE per
+#                 number of Boosters and we also plot the comparative graph of
+#                 Real Prices vs Predicted Prices, with all features importances
 # Author        : Neves4
 # Outputs       : Figure with one plot      : 'XGBoost RMSE'
 #                 Figure with two plots     : 'Predicted prices vs Real Prices'
@@ -17,20 +17,14 @@
 #==============================================================================
 
 ##### IMPORTING #####
-# Importar numpy como dependência para as funções/matrizes nessa ML. Para plotar
-# usaremos o pyplot
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
-
-plt.style.use('ggplot') # Customizando o estilo do matplotlib
-
-# Importar também os datasets (pois utilizaremos o load_boston) e serão usadas
-# as funções shuffe (para embaralhar os dados) e mean_square_error (para calcu-
-# lar o erro do algoritmo em questão)
 import xgboost as xgb
 from sklearn import datasets, model_selection
 from sklearn.metrics import mean_squared_error, r2_score
+
+plt.style.use('ggplot') # Customizando o estilo do matplotlib
 
 ##### FUNCTIONS #####
 def plot_FeatureImportances(model, X, Y_test, Y_pred):
@@ -151,15 +145,7 @@ def best_GridSearch(param_grid, X_train, Y_train, X_test, Y_test):
 
     # OK great, so we got back the best estimator parameters as follows:
     print ("-----------  Best Estimator Parameters  -----------")
-    print ("n_estimators: {:d}" .format(bestmodel.n_estimators))
-    print ("Learning Rate: {:.2f}" .format(bestmodel.learning_rate))
-    print ("max_depth: {:d}"  .format(bestmodel.max_depth))
-    print ("min_child_weight: {:d}" .format(bestmodel.min_child_weight))
-    print ("Gamma: {:.2f}" .format(bestmodel.gamma))
-    print ("subsample: {:.3f}" .format(bestmodel.subsample))
-    print ("colsample_bytree: {:.3f}" .format(bestmodel.colsample_bytree))
-    print ("Lambda: {:.3f}" .format(bestmodel.reg_lambda))
-    print ("alpha: {:.10f}" .format(bestmodel.reg_alpha))
+    print (regressor.best_params_)
     print ("-----------  ACCURACY ASSESSMENT -----------")
     print("RMSE: {:.4f}" .format(rmse))
     print("CV Scores - Test: {:.4f} (+/- {:.4f})" .format(cv_test.mean(),\
