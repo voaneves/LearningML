@@ -1,0 +1,54 @@
+{
+  "repo": "LearningML",
+  "branch": "master",
+  "lang": "en",
+  "license": "MIT",
+  "name": "LearningML",
+  "tagline": "Python and Jupyter examples of regression and neural-network classification on real datasets.",
+  "description": "Machine learning study project: regression scripts and a notebook on real datasets, plus neural networks written from scratch with NumPy.",
+  "logo": {
+    "mark": "LM"
+  },
+  "buttons": [
+    {
+      "id": "landing",
+      "text": "View landing page",
+      "kind": "primary",
+      "font": "sans",
+      "href": "https://voaneves.github.io/LearningML/",
+      "landing": false
+    },
+    {
+      "id": "code",
+      "text": "Browse the code",
+      "kind": "secondary",
+      "font": "sans",
+      "href": "https://github.com/voaneves/LearningML/tree/master/Regression",
+      "landing_kind": "primary"
+    },
+    {
+      "id": "hire",
+      "text": "Let's talk",
+      "kind": "primary",
+      "font": "sans",
+      "href": "https://voaneves.com/en/#contact",
+      "landing": false
+    },
+    {
+      "id": "site",
+      "text": "voaneves.com",
+      "kind": "secondary",
+      "font": "sans",
+      "href": "https://voaneves.com/en/",
+      "landing": false
+    }
+  ],
+  "features": [
+    "Regression on Boston Housing, energy consumption, gun violence and Bulldozers prices.",
+    "Neural networks from scratch with NumPy: sigmoid, ReLU and softmax.",
+    "Study notes written with the Feynman technique."
+  ],
+  "landing": true,
+  "live_url": "https://voaneves.github.io/LearningML/",
+  "hire_href": "https://voaneves.com/en/#contact"
+}
