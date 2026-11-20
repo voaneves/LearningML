@@ -7,6 +7,7 @@
   "tagline": "Python and Jupyter examples of regression and neural-network classification on real datasets.",
   "description": "Machine learning study project: regression scripts and a notebook on real datasets, plus neural networks written from scratch with NumPy.",
   "logo": {
+    "glyph": "network",
     "mark": "LM"
   },
   "buttons": [

@@ -5,7 +5,7 @@
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/voaneves/LearningML/master/assets/logo/logo-dark.svg" />
   <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/voaneves/LearningML/master/assets/logo/logo-light.svg" />
-  <img alt="LearningML logo: a split ink and paper disc with the monogram LM and a red signal dot" src="https://raw.githubusercontent.com/voaneves/LearningML/master/assets/logo/logo-light.svg" width="112" height="112" />
+  <img alt="LearningML logo: a neural network of linked nodes, with a red dot for the output node" src="https://raw.githubusercontent.com/voaneves/LearningML/master/assets/logo/logo-light.svg" width="112" height="112" />
 </picture>
 
 <h1>LearningML</h1>
